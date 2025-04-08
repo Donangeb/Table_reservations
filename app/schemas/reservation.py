@@ -21,3 +21,8 @@ class ReservationResponse(ReservationBase):
 
     class Config:
         from_attributes = True
+
+class ReservationCheck(BaseModel):
+    table_id: int
+    reservation_time: datetime
+    duration_minutes: int
