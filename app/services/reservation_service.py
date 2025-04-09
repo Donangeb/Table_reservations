@@ -1,9 +1,9 @@
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
-from models.models import Reservation
-from models.models import Table
-from schemas.reservation import ReservationCreate
-from exceptions import (
+from app.models.models import Reservation
+from app.models.models import Table
+from app.schemas.reservation import ReservationCreate
+from app.services.exceptions import (
     ReservationConflictError,
     ReservationNotFoundError,
     TableNotFoundError

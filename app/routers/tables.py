@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 
-from services.table_service import TableService, TableNotFoundError
-from schemas.table import Table as TableSchema, TableCreate
-from database import get_db
+from app.services.table_service import TableService, TableNotFoundError
+from app.schemas.table import TableBase as TableSchema, TableCreate
+from app.database import get_db
 
 router = APIRouter()
 

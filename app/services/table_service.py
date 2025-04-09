@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
-from models.models import Table
-from schemas.table import TableCreate
-from exceptions import TableNotFoundError
+from app.models.models import Table
+from app.schemas.table import TableCreate
+from app.services.exceptions import TableNotFoundError
 
 class TableService:
     @staticmethod

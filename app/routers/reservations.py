@@ -2,19 +2,19 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 
-from services.reservation_service import (
+from app.services.reservation_service import (
     ReservationService,
     ReservationNotFoundError,
     ReservationConflictError,
     TableNotFoundError
 )
-from services.table_service import TableNotFoundError
-from schemas.reservation import (
+from app.services.table_service import TableNotFoundError
+from app.schemas.reservation import (
     ReservationBase as ReservationSchema,
     ReservationCreate,
     ReservationCheck
 )
-from database import get_db
+from app.database import get_db
 
 router = APIRouter()
 
