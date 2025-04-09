@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
-from app.models.models import Reservation
-from app.models.models import Table
+from sqlalchemy import and_, func, cast, String, literal
+from app.models.models import Reservation, Table
 from app.schemas.reservation import ReservationCreate
 from app.services.exceptions import (
     ReservationConflictError,
@@ -23,18 +23,22 @@ class ReservationService:
 
     @staticmethod
     def create_reservation(db: Session, reservation: ReservationCreate) -> Reservation:
-        # Проверяем существование столика
         table = db.query(Table).filter(Table.id == reservation.table_id).first()
         if not table:
             raise TableNotFoundError()
 
-        # Проверяем доступность столика
-        reservation_end = reservation.reservation_time + timedelta(minutes=reservation.duration_minutes)
-        
+        new_start = reservation.reservation_time
+        new_end = new_start + timedelta(minutes=reservation.duration_minutes)
+
+        # Correct way to calculate reservation end time in PostgreSQL
+        reservation_end_expr = Reservation.reservation_time + func.make_interval(
+            mins=Reservation.duration_minutes
+        )
+
         conflicting_reservations = db.query(Reservation).filter(
             Reservation.table_id == reservation.table_id,
-            Reservation.reservation_time < reservation_end,
-            Reservation.reservation_time + timedelta(minutes=Reservation.duration_minutes) > reservation.reservation_time
+            Reservation.reservation_time < new_end,
+            reservation_end_expr > new_start
         ).count()
 
         if conflicting_reservations > 0:
@@ -62,11 +66,15 @@ class ReservationService:
     @staticmethod
     def check_table_availability(db: Session, table_id: int, start_time: datetime, duration_minutes: int) -> bool:
         end_time = start_time + timedelta(minutes=duration_minutes)
-        
+
+        reservation_end_expr = Reservation.reservation_time + func.make_interval(
+            mins=Reservation.duration_minutes
+        )
+
         conflicting_reservations = db.query(Reservation).filter(
             Reservation.table_id == table_id,
             Reservation.reservation_time < end_time,
-            Reservation.reservation_time + timedelta(minutes=Reservation.duration_minutes) > start_time
+            reservation_end_expr > start_time
         ).count()
 
         return conflicting_reservations == 0
