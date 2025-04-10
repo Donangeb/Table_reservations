@@ -1,33 +1,17 @@
-# Используем многоэтапную сборку для оптимизации
-FROM python:3.11-slim as builder
+# Базовый образ Python
+FROM python:3.9-slim
 
+# Установка рабочей директории
 WORKDIR /app
 
-# Установка зависимостей для сборки
-RUN apt-get update && apt-get install -y \
-    gcc \
-    python3-dev \
-    libpq-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-# Копируем зависимости
+# Копирование файлов зависимостей
 COPY requirements.txt .
-RUN pip install --user --no-cache-dir -r requirements.txt
 
-# Финальный образ
-FROM python:3.11-slim
-WORKDIR /app
+# Установка зависимостей
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Копируем зависимости из builder
-COPY --from=builder /root/.local /root/.local
-ENV PATH=/root/.local/bin:$PATH
-
-# Копируем код приложения
+# Копирование остальных файлов проекта
 COPY . .
 
-# Устанавливаем переменные окружения
-ENV PYTHONPATH=/app \
-    PYTHONUNBUFFERED=1
-
-# Запуск приложения
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Команда для запуска приложения
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8001"]

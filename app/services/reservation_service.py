@@ -32,7 +32,7 @@ class ReservationService:
 
         # Correct way to calculate reservation end time in PostgreSQL
         reservation_end_expr = Reservation.reservation_time + func.make_interval(
-            mins=Reservation.duration_minutes
+            0, 0, 0, 0, 0, Reservation.duration_minutes, 0
         )
 
         conflicting_reservations = db.query(Reservation).filter(

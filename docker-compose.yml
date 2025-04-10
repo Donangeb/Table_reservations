@@ -1,33 +1,26 @@
+version: '3.8'
+
 services:
   db:
-    image: postgres:15
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: restaurant
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+    image: postgres:13
+    env_file:
+      - .env
     ports:
       - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
   web:
     build: .
-    volumes:
-      - .:/app
     ports:
-      - "8000:8000"
-    environment:
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/restaurant
+      - "${WEB_PORT}:${WEB_PORT}"
     depends_on:
       - db
-
-  alembic:
-    build: .
-    command: alembic upgrade head
-    depends_on:
-      - db
-    environment:
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/restaurant
+    env_file:
+      - .env
+    command: >
+      sh -c "alembic upgrade head &&
+             uvicorn app.main:app --host 0.0.0.0 --port ${WEB_PORT}"
 
 volumes:
   postgres_data:

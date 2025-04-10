@@ -4,8 +4,8 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
-from models.models import Reservation #noqa
-from database import SQLALCHEMY_DATABASE_URL, Base
+from app.models.models import Reservation #noqa
+from app.database import SQLALCHEMY_DATABASE_URL, Base
 
 config = context.config
 
