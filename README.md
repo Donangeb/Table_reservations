@@ -37,3 +37,10 @@ RESTful API для управления бронированием столик�
 ```bash
 git clone https://github.com/Donangeb/Table_reservations.git
 cd Table_reservations
+```
+### 2. Создайте файл .env в корне проекта и заполните его по примеру файла .env.example
+
+### 3. Запуск контейнеров
+```bash
+docker-compose up -d
+```
