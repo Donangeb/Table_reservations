@@ -1,0 +1,33 @@
+Цель проекта: Разработка API для управления бронированием столиков в ресторане с возможностью создания, просмотра и удаления броней, а также управления столиками.
+
+Технологии:
+Backend: FastAPI (Python)
+База данных: PostgreSQL
+ORM: SQLAlchemy
+Миграции: Alembic
+Контейнеризация: Docker + Docker Compose
+
+Основные функции:
+
+Управление столиками (Table):
+Просмотр всех столиков (GET /tables/)
+Добавление нового столика (POST /tables/)
+Удаление столика (DELETE /tables/{id})
+
+Управление бронями (Reservation):
+Просмотр всех броней (GET /reservations/)
+Создание брони (POST /reservations/) с проверкой на пересечение времени
+Удаление брони (DELETE /reservations/{id})
+
+1️⃣ Клонирование репозитория
+
+git clone https://github.com/Donangeb/Table_reservations.git
+cd Table_reservations
+
+2️⃣ Создание .env файла
+
+Создайте файл .env в корне проекта и заполните его по примеру файла .env.example
+
+3️⃣ Запуск контейнеров
+
+docker-compose up -d
